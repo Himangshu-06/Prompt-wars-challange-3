@@ -6,7 +6,7 @@ EcoTrace AI is a premium, client-side climate-tech web application designed to h
 
 ## 🚀 Live Demo
 
-🔗 **Deployed App:** [your-deployed-link.netlify.app](https://your-deployed-link.netlify.app)
+🔗 **Deployed App:** [your-deployed-link.netlify.app](astonishing-lollipop-2ccd0a.netlify.app)
 
 ---
 ## ✨ Features
