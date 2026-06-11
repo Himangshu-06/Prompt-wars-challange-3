@@ -1,4 +1,4 @@
-// ================= STATE & CONSTANTS =================
+ // ================= STATE & CONSTANTS =================
 const state = {
   currentStep: 0,
   answers: {
