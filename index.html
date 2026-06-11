@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoTrace AI — Carbon Footprint Tracker</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind Config for custom theme colors -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            forest: '#0D2B1F',
+            mint: '#A8F0C6',
+            mintDark: '#76d99f',
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+            serif: ['Source Serif 4', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-forest text-white overflow-x-hidden min-h-screen-safe font-sans">
+
+  <!-- ================= HERO SECTION ================= -->
+  <section id="hero" class="relative w-full min-h-screen-safe flex flex-col justify-between overflow-hidden z-10 select-none">
+    <!-- Looping Background Video -->
+    <div id="hero-video-container" class="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none opacity-100">
+      <video id="hero-video" autoplay muted loop playsinline class="w-full h-full object-cover">
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260315_073750_51473149-4350-4920-ae24-c8214286f323.mp4" type="video/mp4">
+        <!-- Fallback video url or styling is handled via JS and CSS -->
+      </video>
+      <!-- Subtle Dark Overlay for contrast -->
+      <div class="absolute inset-0 bg-black/30"></div>
+    </div>
+
+    <!-- Floating Content Above Video (z-index 10) -->
+    <div class="relative w-full flex-1 flex flex-row min-h-screen-safe z-10 p-4 sm:p-6 lg:p-8">
+      
+      <!-- LEFT PANEL (52% width on desktop, full width on mobile) -->
+      <div class="w-full lg:w-[52%] flex flex-col justify-between relative p-6 sm:p-8 md:p-12 lg:p-14 min-h-[85vh] lg:min-h-0 rounded-[2rem] overflow-hidden">
+        <!-- liquid-glass-strong overlay -->
+        <div class="absolute inset-0 rounded-[2rem] liquid-glass-strong -z-10"></div>
+        
+        <!-- Navigation -->
+        <nav class="flex flex-row justify-between items-center w-full">
+          <div class="flex items-center space-x-2 text-xl font-bold tracking-tight">
+            <span class="text-2xl">🌱</span>
+            <span>EcoTrace</span>
+          </div>
+          <button id="menu-btn" class="liquid-glass text-sm px-4 py-2 rounded-full text-white/80 hover:text-white transition-all interactive-hover flex items-center gap-2">
+            <i data-lucide="menu" class="w-4 h-4"></i>
+            <span>Menu</span>
+          </button>
+        </nav>
+
+        <!-- Hero Center -->
+        <div class="flex-1 flex flex-col justify-center items-start py-12 lg:py-16">
+          <div class="mb-6 liquid-glass p-4 rounded-3xl flex items-center justify-center interactive-hover">
+            <!-- Large Leaf Icon -->
+            <i data-lucide="leaf" class="w-16 h-16 text-white stroke-[1.2]"></i>
+          </div>
+          
+          <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight text-white leading-tight mb-8">
+            Track your impact,<br>
+            <span class="font-accent">heal the planet</span>
+          </h1>
+
+          <button id="cta-start" class="liquid-glass-strong py-4 px-8 rounded-full flex items-center gap-4 text-lg font-medium tracking-wide text-white hover:text-mintDark transition-all interactive-hover group mb-10">
+            <span>Start Tracking</span>
+            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-all">
+              <i data-lucide="arrow-right" class="w-4 h-4 text-white"></i>
+            </div>
+          </button>
+
+          <!-- Feature Pills -->
+          <div class="flex flex-wrap gap-3">
+            <div class="liquid-glass py-2 px-5 rounded-full text-xs font-light text-white/80 flex items-center gap-2 interactive-hover">
+              <span>🚗</span> <span>Transport</span>
+            </div>
+            <div class="liquid-glass py-2 px-5 rounded-full text-xs font-light text-white/80 flex items-center gap-2 interactive-hover">
+              <span>🏠</span> <span>Energy</span>
+            </div>
+            <div class="liquid-glass py-2 px-5 rounded-full text-xs font-light text-white/80 flex items-center gap-2 interactive-hover">
+              <span>🌿</span> <span>Diet</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Quote -->
+        <div class="w-full pt-6 border-t border-white/5 flex flex-col gap-2">
+          <span class="text-[10px] tracking-widest uppercase text-white/40 font-semibold">Your Carbon Journey</span>
+          <p class="text-sm text-white/70 leading-relaxed font-light">
+            "Small actions compound into <span class="font-accent text-white">world-changing results.</span>"
+          </p>
+          <div class="flex items-center gap-3 mt-1">
+            <div class="h-[1px] w-8 bg-white/10"></div>
+            <span class="text-[10px] tracking-widest text-white/50 font-bold">ECOTRACE AI</span>
+            <div class="h-[1px] w-8 bg-white/10"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT PANEL (48% width, desktop only, hidden on mobile) -->
+      <div class="hidden lg:flex w-[48%] flex-col justify-between pl-8 xl:pl-12">
+        
+        <!-- Top bar (Social media links in liquid-glass pill) -->
+        <div class="flex justify-end w-full">
+          <div class="liquid-glass px-4 py-2.5 rounded-full flex items-center gap-4">
+            <a href="#" class="text-white/60 hover:text-white transition-colors interactive-hover">
+              <i data-lucide="github" class="w-4 h-4"></i>
+            </a>
+            <a href="#" class="text-white/60 hover:text-white transition-colors interactive-hover">
+              <i data-lucide="twitter" class="w-4 h-4"></i>
+            </a>
+            <a href="#" class="text-white/60 hover:text-white transition-colors interactive-hover">
+              <i data-lucide="linkedin" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Small User Counter Card -->
+        <div class="liquid-glass p-5 rounded-3xl w-60 self-end mt-8 interactive-hover">
+          <div class="flex items-center gap-3">
+            <div class="flex -space-x-2">
+              <div class="w-8 h-8 rounded-full border border-forest bg-white/10 flex items-center justify-center text-[10px] font-bold">A</div>
+              <div class="w-8 h-8 rounded-full border border-forest bg-white/20 flex items-center justify-center text-[10px] font-bold">B</div>
+              <div class="w-8 h-8 rounded-full border border-forest bg-mint/80 flex items-center justify-center text-[10px] font-bold text-forest">C</div>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-white">Join 12,000+ trackers</p>
+              <p class="text-[10px] text-white/50">Reducing emissions daily</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Feature Section -->
+        <div class="mt-auto w-full liquid-glass p-6 rounded-[2.5rem] flex flex-col gap-4">
+          <div class="grid grid-cols-2 gap-4">
+            <!-- CO2 Calculator Card -->
+            <div class="liquid-glass p-5 rounded-3xl flex flex-col gap-3 interactive-hover">
+              <div class="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center">
+                <i data-lucide="calculator" class="w-5 h-5 text-white/80"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium">CO₂ Calculator</p>
+                <p class="text-[10px] text-white/40">Precise emission metrics</p>
+              </div>
+            </div>
+            <!-- Trend Archive Card -->
+            <div class="liquid-glass p-5 rounded-3xl flex flex-col gap-3 interactive-hover">
+              <div class="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center">
+                <i data-lucide="trending-up" class="w-5 h-5 text-white/80"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium">Trend Archive</p>
+                <p class="text-[10px] text-white/40">Historical footprint stats</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Card: Earth/Forest image thumbnail + insights description -->
+          <div class="liquid-glass p-4 rounded-3xl flex items-center gap-4 relative overflow-hidden interactive-hover">
+            <!-- Thumbnail Image with Gradient Fallback -->
+            <div class="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 bg-gradient-to-tr from-forest to-mint/30 border border-white/10 relative flex items-center justify-center">
+              <img src="earth_forest_thumbnail.png" alt="Earth Forest" class="w-full h-full object-cover absolute inset-0 transition-opacity duration-300" onerror="this.style.opacity='0'">
+              <i data-lucide="sparkles" class="w-8 h-8 text-mint/30 absolute"></i>
+            </div>
+            <div class="flex-1">
+              <span class="text-[9px] bg-mint/10 text-mint px-2 py-0.5 rounded-full font-medium uppercase tracking-wider">Climate AI</span>
+              <h4 class="text-sm font-semibold mt-1">AI-Powered Insights</h4>
+              <p class="text-[11px] text-white/50 mt-0.5 leading-snug">Personalized tips ranked by carbon impact</p>
+            </div>
+            <button class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/80 interactive-hover">
+              <span class="text-lg">+</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Scroll To Begin Chevron Indicator -->
+    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 z-20 cursor-pointer text-white/40 hover:text-white/80 transition-colors animate-bounce-subtle" id="scroll-chevron">
+      <span class="text-[10px] tracking-widest uppercase font-semibold">Scroll to begin</span>
+      <i data-lucide="chevron-down" class="w-5 h-5"></i>
+    </div>
+  </section>
+
+  <!-- ================= APP SECTION ================= -->
+  <main id="app" class="relative w-full min-h-screen bg-forest px-4 py-16 sm:px-6 md:px-12 lg:px-16 xl:px-24 flex flex-col gap-16 select-none max-w-7xl mx-auto">
+    
+    <!-- Settings Drawer Toggle (For API Key Setup) -->
+    <div class="flex justify-end w-full">
+      <button id="settings-toggle" class="liquid-glass py-2.5 px-5 rounded-full text-xs font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2 interactive-hover">
+        <i data-lucide="sparkles" class="w-4 h-4 text-mint"></i>
+        <span>AI Engine Settings</span>
+      </button>
+    </div>
+
+    <!-- ================= 1. ONBOARDING QUIZ ================= -->
+    <section id="quiz-section" class="w-full max-w-3xl mx-auto">
+      <div class="flex flex-col gap-6">
+        <!-- Section Header -->
+        <div class="text-center lg:text-left">
+          <span class="text-xs uppercase tracking-widest text-mint font-semibold">Step 01 / Metrics</span>
+          <h2 class="text-3xl sm:text-4xl font-light tracking-tight mt-2">Initialize Your Profile</h2>
+          <p class="text-sm text-white/50 mt-1 font-light">Estimate your monthly output to generate your footprint profile.</p>
+        </div>
+
+        <!-- Quiz Container Card -->
+        <div class="liquid-glass-strong rounded-[2rem] p-8 sm:p-10 relative min-h-[400px] flex flex-col justify-between overflow-hidden shadow-2xl">
+          <!-- Progress Bar -->
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-white/5">
+            <div id="quiz-progress" class="h-full bg-gradient-to-r from-mint to-mintDark transition-all duration-300" style="width: 14.2%;"></div>
+          </div>
+
+          <!-- Question Switchboard Container (cards transition in/out here) -->
+          <div id="quiz-question-container" class="flex-1 flex flex-col justify-center my-6 relative min-h-[260px]">
+            <!-- Content gets injected dynamically by app.js -->
+          </div>
+
+          <!-- Quiz Navigation -->
+          <div class="flex flex-row justify-between items-center pt-6 border-t border-white/5">
+            <button id="quiz-prev" class="liquid-glass px-6 py-3 rounded-full text-xs font-semibold text-white/50 hover:text-white hover:bg-white/5 transition-all disabled:opacity-20 disabled:pointer-events-none interactive-hover">
+              Back
+            </button>
+            <span id="quiz-step-indicator" class="text-xs font-semibold text-white/40">Question 1 of 7</span>
+            <button id="quiz-next" class="liquid-glass py-3 px-8 rounded-full text-xs font-semibold text-forest bg-mint hover:bg-mintDark transition-all disabled:opacity-50 interactive-hover flex items-center gap-2">
+              <span>Next</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 2. RESULTS DASHBOARD ================= -->
+    <section id="results-section" class="w-full hidden">
+      <div class="flex flex-col gap-8">
+        <!-- Section Header -->
+        <div class="text-center">
+          <span class="text-xs uppercase tracking-widest text-mint font-semibold">Step 02 / Impact Analysis</span>
+          <h2 class="text-3xl sm:text-4xl font-light tracking-tight mt-2">Your Carbon Footprint</h2>
+        </div>
+
+        <!-- Grid: Number Display + Chart Card -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          
+          <!-- Left: Big Number Count-Up -->
+          <div class="lg:col-span-5 flex flex-col justify-between liquid-glass-strong rounded-3xl p-8 sm:p-10 text-center lg:text-left shadow-xl">
+            <div class="flex flex-col gap-4">
+              <span class="text-xs uppercase tracking-widest text-white/40 font-semibold">Total Monthly Footprint</span>
+              <div class="my-6">
+                <span id="results-co2-value" class="text-7xl sm:text-8xl font-extrabold tracking-tight text-white">0</span>
+                <span class="text-2xl font-light text-white/50 block sm:inline ml-1">kg CO₂ / mo</span>
+              </div>
+            </div>
+            <div class="pt-6 border-t border-white/5 flex flex-col gap-2">
+              <p id="results-comparison-text" class="text-sm text-white/70 font-light leading-relaxed">
+                Calculating comparison...
+              </p>
+              <div class="flex items-center gap-2 text-xs text-mint mt-1">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span id="results-status-badge">Optimization profile ready</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Donut Chart Breakdown -->
+          <div class="lg:col-span-7 liquid-glass p-8 rounded-3xl shadow-xl flex flex-col justify-between min-h-[350px]">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <div>
+                <h3 class="text-lg font-semibold">Emission Breakdown</h3>
+                <p class="text-xs text-white/40">Carbon intensity by lifestyle category</p>
+              </div>
+              <!-- Legend display handles -->
+              <div class="flex gap-2 flex-wrap text-xs">
+                <span class="flex items-center gap-1.5 text-white/70"><span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>Transport</span>
+                <span class="flex items-center gap-1.5 text-white/70"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>Energy</span>
+                <span class="flex items-center gap-1.5 text-white/70"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>Diet</span>
+                <span class="flex items-center gap-1.5 text-white/70"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>Shopping</span>
+              </div>
+            </div>
+            
+            <div class="relative flex-1 max-h-[220px] flex items-center justify-center py-2">
+              <canvas id="emissionDonutChart"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 3. AI INSIGHTS PANEL ================= -->
+    <section id="insights-section" class="w-full hidden">
+      <div class="flex flex-col gap-6">
+        <!-- Section Header -->
+        <div class="text-center lg:text-left flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+          <div>
+            <span class="text-xs uppercase tracking-widest text-mint font-semibold">Step 03 / AI Recommendations</span>
+            <h2 class="text-3xl sm:text-4xl font-light tracking-tight mt-2">Personalized Action Plan</h2>
+            <p class="text-sm text-white/50 mt-1 font-light">Custom mitigation strategies optimized for your lifestyle footprint.</p>
+          </div>
+          <button id="trigger-ai-refresh" class="liquid-glass-strong hover:bg-white/5 py-2.5 px-6 rounded-full text-xs font-semibold text-white transition-all flex items-center gap-2 self-center lg:self-auto interactive-hover">
+            <i data-lucide="sparkles" class="w-4 h-4 text-mint"></i>
+            <span>Refresh Insights</span>
+          </button>
+        </div>
+
+        <!-- Shimmer Skeleton Loading State -->
+        <div id="ai-loading" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="liquid-glass-strong rounded-3xl p-6 h-48 flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+              <div class="w-12 h-12 rounded-2xl shimmer-bg"></div>
+              <div class="w-24 h-5 rounded-full shimmer-bg"></div>
+            </div>
+            <div class="space-y-2 mt-4">
+              <div class="w-3/4 h-5 rounded shimmer-bg"></div>
+              <div class="w-5/6 h-3.5 rounded shimmer-bg"></div>
+            </div>
+            <div class="flex justify-between mt-4">
+              <div class="w-20 h-5 rounded-full shimmer-bg"></div>
+              <div class="w-16 h-5 rounded-full shimmer-bg"></div>
+            </div>
+          </div>
+          <div class="liquid-glass-strong rounded-3xl p-6 h-48 flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+              <div class="w-12 h-12 rounded-2xl shimmer-bg"></div>
+              <div class="w-24 h-5 rounded-full shimmer-bg"></div>
+            </div>
+            <div class="space-y-2 mt-4">
+              <div class="w-3/4 h-5 rounded shimmer-bg"></div>
+              <div class="w-5/6 h-3.5 rounded shimmer-bg"></div>
+            </div>
+            <div class="flex justify-between mt-4">
+              <div class="w-20 h-5 rounded-full shimmer-bg"></div>
+              <div class="w-16 h-5 rounded-full shimmer-bg"></div>
+            </div>
+          </div>
+          <div class="liquid-glass-strong rounded-3xl p-6 h-48 flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+              <div class="w-12 h-12 rounded-2xl shimmer-bg"></div>
+              <div class="w-24 h-5 rounded-full shimmer-bg"></div>
+            </div>
+            <div class="space-y-2 mt-4">
+              <div class="w-3/4 h-5 rounded shimmer-bg"></div>
+              <div class="w-5/6 h-3.5 rounded shimmer-bg"></div>
+            </div>
+            <div class="flex justify-between mt-4">
+              <div class="w-20 h-5 rounded-full shimmer-bg"></div>
+              <div class="w-16 h-5 rounded-full shimmer-bg"></div>
+            </div>
+          </div>
+          <div class="liquid-glass-strong rounded-3xl p-6 h-48 flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+              <div class="w-12 h-12 rounded-2xl shimmer-bg"></div>
+              <div class="w-24 h-5 rounded-full shimmer-bg"></div>
+            </div>
+            <div class="space-y-2 mt-4">
+              <div class="w-3/4 h-5 rounded shimmer-bg"></div>
+              <div class="w-5/6 h-3.5 rounded shimmer-bg"></div>
+            </div>
+            <div class="flex justify-between mt-4">
+              <div class="w-20 h-5 rounded-full shimmer-bg"></div>
+              <div class="w-16 h-5 rounded-full shimmer-bg"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Recommendations Cards Grid -->
+        <div id="ai-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Injected dynamically by app.js -->
+        </div>
+
+        <!-- AI Motivation Banner -->
+        <div id="ai-motivation-card" class="liquid-glass p-6 rounded-3xl border-l-2 border-mint/20 mt-2 text-center lg:text-left flex flex-col sm:flex-row items-center gap-4 hidden">
+          <div class="w-10 h-10 rounded-full bg-mint/10 flex items-center justify-center text-mint flex-shrink-0">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <p id="ai-motivation-text" class="text-sm font-light text-white/80 leading-relaxed italic">
+            "Your journey towards carbon neutrality begins with one step today."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 4. PROGRESS TRACKER ================= -->
+    <section id="tracker-section" class="w-full hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        
+        <!-- Left: Action Checklist & Streak -->
+        <div class="lg:col-span-5 flex flex-col justify-between liquid-glass-strong rounded-3xl p-8 sm:p-10 shadow-xl gap-8">
+          <div class="flex flex-col gap-4">
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="text-xs uppercase tracking-widest text-mint font-semibold">Step 04 / Progress</span>
+                <h3 class="text-xl font-semibold mt-1">Mitigation Tracker</h3>
+              </div>
+              <!-- Streak counter -->
+              <div class="flex items-center gap-2 bg-white/5 py-1.5 px-3.5 rounded-full border border-white/5" id="streak-container" title="Click fire to mock incrementing streak week">
+                <span class="text-base select-none">🔥</span>
+                <span id="streak-counter" class="text-sm font-bold text-mint">1 week streak</span>
+              </div>
+            </div>
+            <p class="text-xs text-white/40">Check off actions you commit to implementing to project emissions reductions.</p>
+
+            <!-- Actions Checkbox Container -->
+            <div id="tracker-checklist" class="flex flex-col gap-3.5 mt-4">
+              <!-- Injected dynamically by app.js -->
+            </div>
+          </div>
+
+          <!-- Share buttons -->
+          <div class="pt-6 border-t border-white/5 flex flex-col sm:flex-row gap-4">
+            <button id="share-progress-btn" class="flex-1 py-3.5 px-6 rounded-full bg-mint text-forest font-semibold text-sm hover:bg-mintDark transition-all flex items-center justify-center gap-2 interactive-hover">
+              <i data-lucide="share-2" class="w-4 h-4"></i>
+              <span>Share My Progress</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Line Chart Projections -->
+        <div class="lg:col-span-7 liquid-glass p-8 rounded-3xl shadow-xl flex flex-col justify-between min-h-[350px]">
+          <div>
+            <h3 class="text-lg font-semibold">Emission Projection</h3>
+            <p class="text-xs text-white/40">Simulated carbon reduction curve over the next 4 weeks</p>
+          </div>
+          
+          <div class="relative flex-1 max-h-[240px] flex items-center justify-center py-4">
+            <canvas id="projectionLineChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="w-full py-12 px-6 border-t border-white/5 bg-forest select-none relative z-10">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-white/40 font-light">
+      <div class="flex items-center gap-2">
+        <span>🌱</span>
+        <span>EcoTrace AI Carbon Tracker © 2026. Made with beauty and logic.</span>
+      </div>
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-white transition-colors">Privacy</a>
+        <a href="#" class="hover:text-white transition-colors">Terms</a>
+        <a href="#" class="hover:text-white transition-colors">Documentation</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= AI SETTINGS MODAL ================= -->
+  <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="w-full max-w-md liquid-glass-strong rounded-3xl p-8 shadow-2xl relative">
+      <button id="settings-close" class="absolute top-5 right-5 text-white/40 hover:text-white transition-all interactive-hover">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-2xl bg-mint/10 flex items-center justify-center text-mint">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold">AI Settings</h3>
+          <p class="text-xs text-white/50 font-light">Configure Anthropic Messages API</p>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <!-- API Mode Switcher -->
+        <div class="flex items-center justify-between py-2 border-b border-white/5">
+          <div>
+            <p class="text-sm font-semibold">Direct API Connection</p>
+            <p class="text-[11px] text-white/40">Calls api.anthropic.com directly</p>
+          </div>
+          <!-- Custom toggle switch -->
+          <label class="relative inline-flex items-center cursor-pointer select-none">
+            <input type="checkbox" id="api-toggle" class="sr-only peer">
+            <div class="w-11 h-6 bg-white/10 rounded-full peer peer-focus:ring-2 peer-focus:ring-mint/20 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-mint"></div>
+          </label>
+        </div>
+
+        <!-- Key Input Container (collapsible depending on toggle) -->
+        <div id="api-key-container" class="space-y-2 opacity-50 pointer-events-none transition-all">
+          <label class="block text-xs font-semibold text-white/60">Claude API Key</label>
+          <div class="relative">
+            <input type="password" id="api-key-input" placeholder="sk-ant-..." class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-xs font-mono outline-none text-white focus:border-mint transition-colors">
+            <i data-lucide="key" class="w-4 h-4 text-white/30 absolute right-4 top-3.5"></i>
+          </div>
+          <p class="text-[10px] text-white/40 leading-relaxed">
+            Your key is saved locally in your browser's session storage. It is never transmitted anywhere except directly to Anthropic's endpoints.
+          </p>
+        </div>
+
+        <!-- Local Advisor Status Card -->
+        <div class="bg-white/5 border border-white/5 p-4 rounded-2xl flex items-start gap-3">
+          <i data-lucide="shield-check" class="w-5 h-5 text-mint flex-shrink-0 mt-0.5"></i>
+          <div>
+            <p class="text-xs font-semibold text-mint">Smart Local Advisor fallback</p>
+            <p class="text-[10px] text-white/50 leading-relaxed mt-1">
+              If Direct API connection is toggled off or encounters CORS/network restrictions, the app automatically switches to the Smart Local Advisor. It generates customized advice matching Sonnet's format in under 200ms.
+            </p>
+          </div>
+        </div>
+
+        <button id="settings-save-btn" class="w-full py-3.5 rounded-full bg-mint text-forest font-semibold text-sm hover:bg-mintDark transition-all interactive-hover mt-2">
+          Save Preferences
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION ================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 py-3.5 px-6 rounded-2xl bg-mint text-forest font-semibold text-sm shadow-2xl flex items-center gap-2 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-300">
+    <i data-lucide="check-circle" class="w-4 h-4"></i>
+    <span id="toast-message">Copied to clipboard!</span>
+  </div>
+
+  <!-- Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>
