@@ -6,9 +6,10 @@ EcoTrace AI is a premium, client-side climate-tech web application designed to h
 
 ## 🚀 Live Demo
 
-🔗 **Deployed App:** [your-deployed-link.netlify.app](astonishing-lollipop-2ccd0a.netlify.app)
+🔗 **Deployed App:** [EcoTrace](https://astonishing-lollipop-2ccd0a.netlify.app)
 
 ---
+
 ## ✨ Features
 
 - **3D Liquid Glass Hero Landing**: Full-screen split-panel hero section with a looping background video, clean typography (Poppins & Source Serif 4), custom-masked gradient borders, and responsive design (desktop split view & mobile-optimized single-panel layout).
